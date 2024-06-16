@@ -135,17 +135,17 @@ Wyobraź sobie, że malujesz obraz na płótnie, a ludzie ciągle patrzą. Trudn
 ### Algorytm rysowania linii
 
 #### Cel:
-Rysowanie linii między dwoma punktami \( (x0, y0) \) i \( (x1, y1) \) na ekranie, aby linia była jak najbardziej realistyczna.
+Rysowanie linii między dwoma punktami <img src="https://latex.codecogs.com/svg.image?\bg{white}(x0,y0),(x1,y1)" title="(x0,y0),(x1,y1)" /> na ekranie, aby linia była jak najbardziej realistyczna.
 
 #### Algorytm Zmiennoprzecinkowy
 
 ##### Równanie prostej:
 Prosta może być opisana równaniem:
-\[ y = m \cdot x + c \]
+<img src="https://latex.codecogs.com/svg.image?\bg{white}y=m\cdot&space;x&plus;c&space;" title="y=m\cdot x+c " />
 gdzie:
-- \( m \) to nachylenie (slope) linii, obliczane jako:
-\[ m = \frac{y1 - y0}{x1 - x0} \]
-- \( c \) to punkt przecięcia z osią y.
+- <img src="https://latex.codecogs.com/svg.image?\bg{white}m&space;" title="m " /> to nachylenie (slope) linii, obliczane jako:
+<img src="https://latex.codecogs.com/svg.image?\bg{white}m=\frac{y1-y0}{x1-x0}" title="m=\frac{y1-y0}{x1-x0}" />
+- <img src="https://latex.codecogs.com/svg.image?\bg{white}c&space;" title="c " /> to punkt przecięcia z osią y.
 
 ##### Rysowanie linii:
 1. Oblicz nachylenie \( m \).
