@@ -182,6 +182,8 @@ public void drawPixel(int x, int y) {
     System.out.println("Drawing pixel at (" + x + ", " + y + ")");
 }
 
+```
+
 ### Wyjaśnienie kodu
 
 #### Obliczanie nachylenia:
