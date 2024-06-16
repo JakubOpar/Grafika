@@ -55,9 +55,9 @@ Jest to funkcja <img src="https://latex.codecogs.com/svg.image?\bg{white}f:\math
 
 **Obraz cyfrowy:**
 
-Jest to funkcja \( I: \{ (x, y) \in \mathbb{Z} \mid 0 \leq x < N_{cols}, 0 \leq y < N_{rows} \} \to \{ 0, 1, \ldots, 2^a - 1 \} \). Oznacza to, że mamy macierz pikseli, gdzie każdy piksel ma przypisaną wartość z pewnego zakresu, na przykład od 0 do 255 (jeśli głębia koloru wynosi 8 bitów). Każda wartość odpowiada poziomowi jasności lub koloru, które można reprezentować cyfrowo.
+Jest to funkcja <img src="https://latex.codecogs.com/svg.image?\bg{white}I:{(x,y)\in\mathbb{Z}\mid&space;0\leq&space;x<N_{cols},0\leq&space;y<N_{rows}}\to{0,1,\ldots,2^a-1}" title="I:{(x,y)\in\mathbb{Z}\mid 0\leq x<N_{cols},0\leq y<N_{rows}}\to{0,1,\ldots,2^a-1}" />. Oznacza to, że mamy macierz pikseli, gdzie każdy piksel ma przypisaną wartość z pewnego zakresu, na przykład od 0 do 255 (jeśli głębia koloru wynosi 8 bitów). Każda wartość odpowiada poziomowi jasności lub koloru, które można reprezentować cyfrowo.
 
-W obrazie cyfrowym, \( N_{cols} \) oznacza liczbę kolumn (szerokość obrazu) oraz \( N_{rows} \) liczbę wierszy (wysokość obrazu). Parametr \( a \) jest zazwyczaj liczbą bitów na kanał kolorów, co determinuje ilość możliwych wartości dla każdego piksela. Na przykład, dla 8-bitowej głębi kolorów, \( a = 8 \) i piksel może przyjąć wartości od 0 do 255.
+W obrazie cyfrowym, <img src="https://latex.codecogs.com/svg.image?\bg{white}N_{cols}" title="N_{cols}" /> oznacza liczbę kolumn (szerokość obrazu) oraz <img src="https://latex.codecogs.com/svg.image?\bg{white}N_{rows}" title="N_{rows}" /> liczbę wierszy (wysokość obrazu). Parametr <img src="https://latex.codecogs.com/svg.image?\bg{white}a&space;" title="a " /> jest zazwyczaj liczbą bitów na kanał kolorów, co determinuje ilość możliwych wartości dla każdego piksela. Na przykład, dla 8-bitowej głębi kolorów, <img src="https://latex.codecogs.com/svg.image?\bg{white}a=8&space;" title="a=8 " /> i piksel może przyjąć wartości od 0 do 255.
 
 W przypadku obrazu cyfrowego, funkcja \( I \) mapuje każdy punkt obrazu (o współrzędnych całkowitoliczbowych) na konkretną wartość numeryczną, która reprezentuje kolor danego piksela.
 
