@@ -384,3 +384,297 @@ Funkcja `computeBarycentric` oblicza współrzędne barycentryczne punktu `p` wz
 
 Funkcja `fillTriangle` iteruje przez wszystkie piksele w obszarze otaczającym trójkąt, oblicza współrzędne barycentryczne dla każdego piksela i sprawdza, czy piksel leży wewnątrz trójkąta. Jeżeli współrzędne barycentryczne wskazują, że piksel leży wewnątrz trójkąta, funkcja `drawPixel` rysuje ten piksel.
 
+# Problem Przesłaniających Się Trójkątów i Rozwiązanie za pomocą Testu Z-Bufora
+
+W grafice komputerowej, gdy mamy kilka trójkątów, które rzutowane na płaszczyznę przysłaniają się nawzajem, musimy określić prawidłowy kolor piksela. Aby to zrobić, używamy metody z-bufora. Wyjaśnijmy tę koncepcję w prosty sposób.
+
+## Z-Buffer: Zasady Działania
+
+Z-bufor, znany także jako bufor głębokości, to technika używana do eliminacji powierzchni zasłoniętych. Polega ona na przechowywaniu głębokości (współrzędnej z) każdego piksela renderowanej sceny.
+
+### Krok po kroku:
+
+#### Tworzenie Z-Bufora:
+
+1. Tworzymy bufor, który ma ten sam rozmiar co bufor ramki (czyli przestrzeń, w której renderowany jest obraz). Ten nowy bufor to właśnie z-bufor.
+2. Z-bufor nie przechowuje koloru piksela, ale jego głębokość (współrzędną z).
+3. Z-bufor inicjujemy maksymalną możliwą wartością współrzędnej z w danej scenie. Na przykład, jeśli renderujemy scenę w 3D, ustawiamy każdą wartość w z-buforze na bardzo dużą wartość, aby początkowo wszystkie piksele były jak najdalej.
+
+#### Rysowanie Trójkątów:
+
+1. Podczas rysowania trójkątów, dla każdego piksela trójkąta obliczamy jego współrzędną z.
+2. Sprawdzamy głębokość piksela (jego wartość z) i porównujemy ją z aktualnie przechowywaną wartością z w z-buforze dla tej samej współrzędnej ekranu (x, y).
+3. Aktualizujemy Z-Bufor i Bufor Ramki:
+   - Jeśli współrzędna z piksela jest mniejsza (piksel jest bliżej kamery) niż wartość w z-buforze, oznacza to, że ten piksel jest widoczny. W takim przypadku aktualizujemy z-bufor o nową wartość z i aktualizujemy bufor ramki o kolor tego piksela.
+   - Jeśli współrzędna z piksela jest większa (piksel jest dalej od kamery), ignorujemy ten piksel, ponieważ jest zasłonięty przez inny trójkąt.
+
+### Przykład Ilustracyjny
+
+Wyobraźmy sobie, że renderujemy dwa trójkąty na ekranie. Trójkąt A jest bliżej kamery niż trójkąt B.
+
+#### Inicjalizacja Z-Bufora:
+
+Na początku z-bufor ma maksymalne wartości z, czyli np. 1.0 (zakładając, że wartości z są w zakresie od 0 do 1, gdzie 1 to najdalszy punkt).
+
+#### Rysowanie Trójkąta A:
+
+Dla każdego piksela trójkąta A obliczamy jego współrzędną z. Ponieważ jest to pierwszy rysowany trójkąt, wszystkie jego piksele będą bliżej niż początkowe wartości w z-buforze, więc zaktualizujemy zarówno z-bufor, jak i bufor ramki.
+
+#### Rysowanie Trójkąta B:
+
+Dla każdego piksela trójkąta B również obliczamy jego współrzędną z. Porównujemy współrzędną z każdego piksela trójkąta B z odpowiednią wartością w z-buforze. 
+- Jeśli piksel trójkąta B ma współrzędną z większą niż ta w z-buforze (co oznacza, że jest dalej), ignorujemy ten piksel.
+- Jeśli piksel trójkąta B ma współrzędną z mniejszą niż ta w z-buforze, aktualizujemy zarówno z-bufor, jak i bufor ramki.
+
+```java
+
+public class ZBuffering {
+
+    public static void main(String[] args) {
+        int width = 800;
+        int height = 600;
+        
+        // Bufor ramki
+        int[][] frameBuffer = new int[width][height];
+        // Bufor głębokości (z-bufor)
+        double[][] zBuffer = new double[width][height];
+        
+        // Inicjalizacja z-bufora maksymalnymi wartościami
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                zBuffer[x][y] = Double.POSITIVE_INFINITY;
+            }
+        }
+        
+        // Przykładowe trójkąty z różnymi wartościami z
+        drawTriangle(frameBuffer, zBuffer, new int[]{100, 150, 200}, new int[]{100, 200, 100}, 0.5);
+        drawTriangle(frameBuffer, zBuffer, new int[]{150, 200, 250}, new int[]{150, 250, 150}, 0.3);
+    }
+    
+    public static void drawTriangle(int[][] frameBuffer, double[][] zBuffer, int[] xPoints, int[] yPoints, double zValue) {
+        // Zakładamy prostą rasteryzację trójkąta (dla uproszczenia)
+        int minX = Math.min(xPoints[0], Math.min(xPoints[1], xPoints[2]));
+        int maxX = Math.max(xPoints[0], Math.max(xPoints[1], xPoints[2]));
+        int minY = Math.min(yPoints[0], Math.min(yPoints[1], yPoints[2]));
+        int maxY = Math.max(yPoints[0], Math.max(yPoints[1], yPoints[2]));
+        
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = minX; x <= maxX; x++) {
+                // Zakładamy, że piksel (x, y) należy do trójkąta (sprawdzanie jest pominięte dla uproszczenia)
+                if (zValue < zBuffer[x][y]) {
+                    zBuffer[x][y] = zValue;
+                    frameBuffer[x][y] = getColor();
+                }
+            }
+        }
+    }
+    
+    public static int getColor() {
+        // Zakładamy, że zwracamy kolor piksela (np. 0xFFFFFF dla białego)
+        return 0xFFFFFF;
+    }
+}
+
+
+```
+
+### Inicjalizacja Z-Bufora:
+
+- Ustawiamy wszystkie wartości w z-buforze na `Double.POSITIVE_INFINITY`, co oznacza, że początkowo wszystkie piksele są jak najdalej od kamery.
+
+### Rysowanie Trójkąta:
+
+Funkcja `drawTriangle` przyjmuje bufor ramki, z-bufor oraz współrzędne wierzchołków trójkąta oraz wartość z.
+Iterujemy przez wszystkie piksele wewnątrz prostokąta otaczającego trójkąt.
+Dla każdego piksela sprawdzamy, czy jego wartość z jest mniejsza niż aktualna wartość w z-buforze.
+Jeśli tak, aktualizujemy z-bufor i rysujemy piksel w buforze ramki.
+
+
+# Rasteryzacja i Jej Etapy: Proste Wyjaśnienie
+
+Rasteryzacja to proces przekształcania trójwymiarowych obiektów na dwuwymiarowy obraz na ekranie. Składa się z kilku etapów: przygotowania danych trójkątów, wypełniania trójkątów, cieniowania pikseli i łączenia danych. Omówmy te etapy w prosty sposób.
+
+## 1. Przygotowanie Danych Trójkątów (Triangle Setup)
+
+W tym etapie generowane są dane potrzebne do wypełniania trójkątów, takie jak równania krawędzi. Ten etap jest nieprogramowalny, co oznacza, że działa na stałych funkcjach sprzętowych (fixed function).
+
+- **Równania krawędzi:** Matematyczne wyrażenia określające granice trójkąta na ekranie.
+- **Interpolacja:** Obliczanie, jak wartości takie jak kolor i głębokość zmieniają się wzdłuż krawędzi trójkąta.
+
+## 2. Wypełnianie Trójkątów (Triangle Traversal)
+
+W tym etapie generowane są fragmenty, czyli małe części trójkątów odpowiadające pikselom na ekranie. Obliczane są również interpolowane parametry cieniowania dla każdego fragmentu. Podobnie jak poprzedni etap, ten również jest nieprogramowalny.
+
+- **Fragmenty:** Małe części trójkąta reprezentujące potencjalne piksele na ekranie.
+- **Interpolowane parametry:** Parametry takie jak kolor, tekstura i głębokość są interpolowane na podstawie wierzchołków trójkąta.
+
+## 3. Cieniowanie Pikseli (Pixel Shading)
+
+W tym etapie obliczane są kolory pikseli na podstawie interpolowanych danych cieniowania. Etap ten jest wykonywany przez programowalne rdzenie GPU, co oznacza, że można stosować różne techniki, takie jak teksturowanie.
+
+- **Pixel Shading:** Obliczanie koloru dla każdego piksela na podstawie światła, cieni i tekstur.
+- **Teksturowanie:** Nakładanie tekstur na powierzchnie trójkątów w celu uzyskania bardziej realistycznego wyglądu.
+
+## 4. Łączenie Danych (Merging)
+
+Ten etap jest odpowiedzialny za obliczanie ostatecznego koloru pikseli na podstawie danych z poszczególnych fragmentów. Obejmuje to test z-bufora, obliczanie przezroczystości i umieszczenie danych w buforze ramki.
+
+- **Test z-bufora:** Określanie, który piksel jest bliżej kamery i powinien być widoczny.
+- **Przezroczystość:** Obliczanie efektów przezroczystości dla obiektów częściowo widocznych.
+- **Bufor ramki:** Miejsce w pamięci, gdzie przechowywane są ostateczne dane obrazu, które zostaną wyświetlone na ekranie.
+
+### Podsumowanie
+
+- **Przygotowanie Danych Trójkątów:** Ustalanie granic trójkąta i interpolacja wartości.
+- **Wypełnianie Trójkątów:** Generowanie fragmentów odpowiadających pikselom.
+- **Cieniowanie Pikseli:** Obliczanie kolorów pikseli z zastosowaniem technik cieniowania.
+- **Łączenie Danych:** Ostateczne ustalanie kolorów pikseli z uwzględnieniem widoczności i przezroczystości.
+
+
+# Antialiasing: Zrozumienie i Zastosowanie
+
+Antialiasing to technika stosowana w grafice komputerowej w celu zmniejszenia efektu "schodkowania" na krawędziach obiektów. Schodkowanie, czyli aliasing, jest wynikiem niskiej rozdzielczości i ograniczeń w próbkowaniu sygnałów. Omówmy to zagadnienie krok po kroku, wraz z odpowiednimi terminami i przykładami.
+
+## Cel Antialiasingu
+
+- **Redukcja efektu schodkowania:** Antialiasing wygładza krawędzie obiektów, eliminując widoczne, schodkowe przejścia między pikselami.
+- **Realistyczny wygląd krawędzi:** Dzięki antialiasingowi obiekty na ekranie wyglądają bardziej naturalnie i mniej kanciasto.
+
+## Aliasing Sygnału 1D
+
+Aliasing w kontekście sygnałów 1D (jednowymiarowych) występuje, gdy sygnał jest próbkowany zbyt rzadko, co powoduje utratę informacji. Efekty aliasingu mogą powodować, że sygnał o wysokiej częstotliwości staje się nierozróżnialny od sygnału o niskiej częstotliwości.
+
+- **Powód:** Zbyt mała częstotliwość próbkowania.
+- **Efekt:** Utrata informacji, sygnał o wysokiej częstotliwości jest nierozróżnialny od sygnału o niskiej częstotliwości.
+
+## Filtracja Sygnału 1D
+
+Filtracja jest techniką stosowaną do eliminacji aliasingu poprzez wygładzanie sygnału. W grafice komputerowej filtracja pomaga w antyaliasingu.
+
+- **Sekwencja wag b[i]:** Na potrzeby filtrowania sygnałów stosuje się sekwencję wag, nazywaną filtrem.
+- **Normalizacja wag:** Wagi zazwyczaj są znormalizowane, co oznacza, że ich suma wynosi 1.
+- **Symetryczność:** Filtr jest zazwyczaj symetryczny względem środkowego elementu.
+
+## Konwolucja Sygnału z Filtrem (1D)
+
+Konwolucja jest procesem matematycznym używanym do filtracji sygnałów. Przesuwamy okno filtra wzdłuż sygnału, uzyskując filtrowaną próbkę.
+
+- **Filtracja:** Okno filtra przesuwane jest wzdłuż sygnału, aby uzyskać nowe, wygładzone wartości próbek.
+- **Próbka filtrowana:** Wartość filtrowanej próbki jest wynikiem kontekstu otoczenia, czyli innych próbek w pobliżu.
+- **Formuła konwolucji:** 
+
+(a*b)[i] = ∑_{j=i-r}^{i+r} a[j] * b[i-j]
+
+Jeśli mamy sygnał `a[i]` i filtr `b[i]`, to wartość filtrowana w punkcie `i` zależy od otoczenia sygnału `a` oraz wartości wag filtra `b`.
+
+## Podsumowanie
+
+- **Antialiasing:** Technika wygładzania krawędzi, aby uniknąć schodkowania.
+- **Aliasing:** Wynik zbyt rzadkiego próbkowania, powodujący utratę informacji.
+- **Filtracja:** Proces wygładzania sygnału za pomocą sekwencji wag, aby zmniejszyć aliasing.
+- **Konwolucja:** Metoda matematyczna używana do filtracji sygnałów, biorąca pod uwagę otoczenie każdej próbki.
+
+# Konwolucja sygnału 2D
+
+Konwolucja sygnału 2D jest techniką stosowaną w przetwarzaniu obrazów do filtrowania, wygładzania, wyostrzania i wielu innych operacji. Jest to rozszerzenie konwolucji 1D na dwa wymiary.
+
+## Definicja konwolucji 2D
+
+Konwolucja 2D definiowana jest przez następujące równanie:
+
+(f*h)[i,j] = ∑_k ∑_l f(k,l) * h(i−k,j−l)
+
+- **f**: Obraz (macierz pikseli).
+- **h**: Kernel (filtr), czyli mniejsza macierz używana do operacji konwolucji.
+
+## Przykład obliczeń konwolucji 2D
+
+Załóżmy, że mamy obraz **f** i kernel **h**. Obliczenie wartości piksela w wyniku konwolucji w danym punkcie polega na przemnożeniu wartości piksela obrazu przez odpowiednią wartość filtra, a następnie zsumowanie wszystkich tych iloczynów.
+
+Na przykład:
+
+f1 * h9 + f2 * h8 + f3 * h7 +
+f4 * h6 + f5 * h5 + f6 * h4 +
+f7 * h3 + f8 * h2 + f9 * h1
+
+
+Wartości z filtra **h** (kernela) są nakładane na wartości piksela z obrazu **f**, a wynik jest sumowany, aby uzyskać końcową wartość piksela.
+
+## Antialiasing
+
+Antialiasing to technika mająca na celu redukcję efektu aliasingu, czyli "schodkowania" na krawędziach obiektów.
+
+## Technika supersampling
+
+Supersampling jest jedną z technik antyaliasingu. Proces ten składa się z dwóch kroków:
+
+1. **Renderowanie obrazu w większej rozdzielczości:**
+   Obraz jest renderowany w rozdzielczości wyższej niż docelowa, co pozwala na uzyskanie większej ilości informacji o krawędziach obiektów.
+
+2. **Downsampling:**
+   Obraz jest zmniejszany do docelowej rozdzielczości przy użyciu filtra, na przykład filtra pudełkowego (box filter). Proces ten polega na uśrednianiu grup pikseli, aby uzyskać jeden piksel w finalnym obrazie.
+
+## Wada supersamplingu
+
+Główną wadą supersamplingu jest koszt obliczeniowy. Renderowanie obrazu w wyższej rozdzielczości i późniejsze przeskalowanie wymaga znacznie więcej mocy obliczeniowej i pamięci, co może być problematyczne w aplikacjach o wysokich wymaganiach wydajnościowych.
+
+```java
+
+public class Convolution {
+    public static int[][] applyConvolution(int[][] image, int[][] kernel) {
+        int kernelHeight = kernel.length;
+        int kernelWidth = kernel[0].length;
+        int imageHeight = image.length;
+        int imageWidth = image[0].length;
+        int[][] output = new int[imageHeight][imageWidth];
+
+        int kernelCenterX = kernelWidth / 2;
+        int kernelCenterY = kernelHeight / 2;
+
+        for (int i = 0; i < imageHeight; i++) {
+            for (int j = 0; j < imageWidth; j++) {
+                int sum = 0;
+                for (int m = 0; m < kernelHeight; m++) {
+                    for (int n = 0; n < kernelWidth; n++) {
+                        int x = i + (m - kernelCenterY);
+                        int y = j + (n - kernelCenterX);
+                        if (x >= 0 && x < imageHeight && y >= 0 && y < imageWidth) {
+                            sum += image[x][y] * kernel[m][n];
+                        }
+                    }
+                }
+                output[i][j] = sum;
+            }
+        }
+
+        return output;
+    }
+
+    public static void main(String[] args) {
+        int[][] image = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+
+        int[][] kernel = {
+            {1, 0, -1},
+            {1, 0, -1},
+            {1, 0, -1}
+        };
+
+        int[][] result = applyConvolution(image, kernel);
+
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[0].length; j++) {
+                System.out.print(result[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+```
+
+
