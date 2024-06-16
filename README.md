@@ -51,7 +51,7 @@ Grafika komputerowa znajduje zastosowanie w wielu dziedzinach, takich jak:
 
 **Obraz analogowy:**
 
-Jest to funkcja \( f: \mathbb{R} \times \mathbb{R} \to \mathbb{R} \), co oznacza, że przypisuje każdemu punktowi na płaszczyźnie wartość rzeczywistą. Wyobraź sobie, że każdy punkt w przestrzeni ma przypisaną pewną wartość, jak jasność czy intensywność koloru.
+Jest to funkcja ![R](https://latex.codecogs.com/svg.image?f:\mathbb{R}\times\mathbb{R}\to\mathbb{R}), co oznacza, że przypisuje każdemu punktowi na płaszczyźnie wartość rzeczywistą. Wyobraź sobie, że każdy punkt w przestrzeni ma przypisaną pewną wartość, jak jasność czy intensywność koloru.
 
 **Obraz cyfrowy:**
 
