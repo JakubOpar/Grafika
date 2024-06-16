@@ -175,13 +175,6 @@ public void drawLine(float x0, float y0, float x1, float y1) {
     }
 }
 
-// Dummy method to represent drawing a pixel at (x, y)
-// In a real implementation, this would interface with a graphics library
-public void drawPixel(int x, int y) {
-    // Code to draw a pixel at (x, y)
-    System.out.println("Drawing pixel at (" + x + ", " + y + ")");
-}
-
 ```
 
 ### Wyjaśnienie kodu
@@ -207,3 +200,77 @@ Ponieważ współrzędne pikseli muszą być liczbami całkowitymi, wartość \(
 Funkcja `drawPixel` reprezentuje rysowanie piksela na współrzędnych \( (x, y) \):
 ```java
 drawPixel(Math.round(x), roundedY);
+```
+
+### Algorytm Bresenhama do rysowania linii
+
+Algorytm Bresenhama jest efektywnym sposobem rysowania linii za pomocą liczb całkowitych. Oto jak działa ten algorytm:
+
+#### Założenia
+
+Rysujemy linię między punktami \( (x0, y0) \) i \( (x1, y1) \).
+
+#### Zmienne sterujące
+
+- \( \Delta x \) i \( \Delta y \): Różnice w współrzędnych x i y między punktami:
+  \[ \Delta x = x1 - x0 \]
+  \[ \Delta y = y1 - y0 \]
+
+- \( D \): Zmienna decyzyjna, inicjalizowana jako:
+  \[ D = 2 \cdot \Delta y - \Delta x \]
+
+#### Główne kroki
+
+1. **Inicjalizacja:**
+   - Ustawiamy \( x = x0 \) i \( y = y0 \).
+
+2. **Pętla rysująca:**
+   - Iterujemy po każdym \( x \) od \( x0 \) do \( x1 \).
+   - Rysujemy piksel na współrzędnych \( (x, y) \).
+   - Aktualizujemy \( D \):
+     - Jeśli \( D > 0 \), inkrementujemy \( y \) o 1 i aktualizujemy \( D \) o \( 2 \cdot ( \Delta y - \Delta x ) \).
+     - W przeciwnym razie, aktualizujemy \( D \) o \( 2 \cdot \Delta y \).
+
+#### Przykładowy kod w języku Java
+
+```java
+public void drawLineBresenham(int x0, int y0, int x1, int y1) {
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    
+    int D = 2 * dy - dx;
+    int y = y0;
+
+    for (int x = x0; x <= x1; x++) {
+        drawPixel(x, y);
+        
+        if (D > 0) {
+            y++;
+            D = D - 2 * dx;
+        }
+        
+        D = D + 2 * dy;
+    }
+}
+
+// Dummy method to represent drawing a pixel at (x, y)
+// In a real implementation, this would interface with a graphics library
+public void drawPixel(int x, int y) {
+    // Code to draw a pixel at (x, y)
+    System.out.println("Drawing pixel at (" + x + ", " + y + ")");
+}
+
+```
+
+### Inicjalizacja zmiennych:
+
+- `dx` i `dy` reprezentują różnice współrzędnych między punktami końcowymi.
+- `D` jest inicjalizowane jako `2 * Δy - Δx`.
+- `y` jest początkowo ustawione na `y0`.
+
+### Pętla rysująca:
+
+Pętla iteruje od `x0` do `x1`.
+W każdej iteracji jest rysowany piksel na współrzędnych `(x, y)`.
+Wartość `D` jest aktualizowana w zależności od warunku sprawdzającego, czy przekroczono pewną wartość.
+
