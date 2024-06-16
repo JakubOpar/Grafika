@@ -59,7 +59,7 @@ Jest to funkcja <img src="https://latex.codecogs.com/svg.image?\bg{white}I:{(x,y
 
 W obrazie cyfrowym, <img src="https://latex.codecogs.com/svg.image?\bg{white}N_{cols}" title="N_{cols}" /> oznacza liczbę kolumn (szerokość obrazu) oraz <img src="https://latex.codecogs.com/svg.image?\bg{white}N_{rows}" title="N_{rows}" /> liczbę wierszy (wysokość obrazu). Parametr <img src="https://latex.codecogs.com/svg.image?\bg{white}a&space;" title="a " /> jest zazwyczaj liczbą bitów na kanał kolorów, co determinuje ilość możliwych wartości dla każdego piksela. Na przykład, dla 8-bitowej głębi kolorów, <img src="https://latex.codecogs.com/svg.image?\bg{white}a=8&space;" title="a=8 " /> i piksel może przyjąć wartości od 0 do 255.
 
-W przypadku obrazu cyfrowego, funkcja \( I \) mapuje każdy punkt obrazu (o współrzędnych całkowitoliczbowych) na konkretną wartość numeryczną, która reprezentuje kolor danego piksela.
+W przypadku obrazu cyfrowego, funkcja <img src="https://latex.codecogs.com/svg.image?\bg{white}I{\color{Green}}" title="I{\color{Green}}" /> mapuje każdy punkt obrazu (o współrzędnych całkowitoliczbowych) na konkretną wartość numeryczną, która reprezentuje kolor danego piksela.
 
 ### Charakterystyka obrazu cyfrowego:
 
