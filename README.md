@@ -132,7 +132,7 @@ Wyobraź sobie, że malujesz obraz na płótnie, a ludzie ciągle patrzą. Trudn
 - Kiedy skończysz malować, szybko zamieniasz płótna, pokazując gotowy obraz, a ty zaczynasz malować nowy na drugim płótnie.
 
 
-### Algorytm rysowania linii
+# Algorytm rysowania linii
 
 #### Cel:
 Rysowanie linii między dwoma punktami <img src="https://latex.codecogs.com/svg.image?\bg{white}(x0,y0),(x1,y1)" title="(x0,y0),(x1,y1)" /> na ekranie, aby linia była jak najbardziej realistyczna.
@@ -202,7 +202,7 @@ Funkcja `drawPixel` reprezentuje rysowanie piksela na współrzędnych \( (x, y)
 drawPixel(Math.round(x), roundedY);
 ```
 
-### Algorytm Bresenhama do rysowania linii
+# Algorytm Bresenhama do rysowania linii
 
 Algorytm Bresenhama jest efektywnym sposobem rysowania linii za pomocą liczb całkowitych. Oto jak działa ten algorytm:
 
@@ -297,13 +297,13 @@ gdzie \( \alpha = 1 - \beta - \gamma \).
 
 ### Cechy Współrzędnych Barycentrycznych
 
-- **Punkt wewnątrz trójkąta**: Jeżeli wszystkie współrzędne barycentryczne \( (\alpha, \beta, \gamma) \) należą do przedziału (0, 1), to punkt leży wewnątrz trójkąta.
+- **Punkt wewnątrz trójkąta**: Jeżeli wszystkie współrzędne barycentryczne<img src="https://latex.codecogs.com/svg.image?\bg{white}\alpha,\beta,\gamma&space;" title="\alpha,\beta,\gamma " /> należą do przedziału (0, 1), to punkt leży wewnątrz trójkąta.
 - **Punkt na boku trójkąta**: Jeżeli jedna współrzędna jest równa zero, a pozostałe należą do przedziału (0, 1), to punkt leży na boku trójkąta.
 - **Punkt w wierzchołku trójkąta**: Jeżeli dwie współrzędne są równe zero, a jedna równa 1, to punkt leży w wierzchołku trójkąta.
 
-### Algorytm Wypełniania Trójkątów
+# Algorytm Wypełniania Trójkątów
 
-1. **Obliczenie współrzędnych barycentrycznych dla każdego piksela**: Dla każdego piksela w obszarze zawierającym trójkąt, obliczamy współrzędne barycentryczne \( (\alpha, \beta, \gamma) \).
+1. **Obliczenie współrzędnych barycentrycznych dla każdego piksela**: Dla każdego piksela w obszarze zawierającym trójkąt, obliczamy współrzędne barycentryczne <img src="https://latex.codecogs.com/svg.image?\bg{white}\alpha,\beta,\gamma&space;" title="\alpha,\beta,\gamma " />.
 2. **Sprawdzenie czy punkt leży wewnątrz trójkąta**: Sprawdzamy, czy obliczone współrzędne barycentryczne należą do odpowiednich przedziałów, aby określić, czy piksel leży wewnątrz trójkąta.
 3. **Rysowanie pikseli wewnątrz trójkąta**: Jeżeli współrzędne barycentryczne wskazują, że piksel leży wewnątrz trójkąta, to zamalowujemy ten piksel.
 
