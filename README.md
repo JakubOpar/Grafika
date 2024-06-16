@@ -283,17 +283,17 @@ Wypełnianie trójkątów to proces rysowania wszystkich pikseli wewnątrz trój
 
 Współrzędne barycentryczne pozwalają opisać położenie punktu względem wierzchołków trójkąta. Można je zapisać jako kombinację wierzchołków trójkąta:
 
-\[ p = \alpha \cdot a + \beta \cdot b + \gamma \cdot c \]
+<img src="https://latex.codecogs.com/svg.image?\bg{white}p=\alpha\cdot&space;a&plus;\beta\cdot&space;b&plus;\gamma\cdot&space;c&space;" title="p=\alpha\cdot a+\beta\cdot b+\gamma\cdot c " />
 
-gdzie \( \alpha + \beta + \gamma = 1 \).
+gdzie <img src="https://latex.codecogs.com/svg.image?\bg{white}\alpha&plus;\beta&plus;\gamma=1&space;" title="\alpha+\beta+\gamma=1 " />.
 
 ### Definicja
 
-Punkt \( p \) w współrzędnych barycentrycznych można również zapisać jako:
+Punkt  p w współrzędnych barycentrycznych można również zapisać jako:
 
-\[ p(\alpha, \beta, \gamma) = \alpha \cdot a + \beta \cdot b + \gamma \cdot c \]
+<img src="https://latex.codecogs.com/svg.image?\bg{white}p(\alpha,\beta,\gamma)=\alpha\cdot&space;a&plus;\beta\cdot&space;b&plus;\gamma\cdot&space;c&space;" title="p(\alpha,\beta,\gamma)=\alpha\cdot a+\beta\cdot b+\gamma\cdot c " />
 
-gdzie \( \alpha = 1 - \beta - \gamma \).
+gdzie <img src="https://latex.codecogs.com/svg.image?\bg{white}\alpha=1-\beta-\gamma&space;" title="\alpha=1-\beta-\gamma " />.
 
 ### Cechy Współrzędnych Barycentrycznych
 
