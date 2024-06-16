@@ -274,3 +274,113 @@ Pętla iteruje od `x0` do `x1`.
 W każdej iteracji jest rysowany piksel na współrzędnych `(x, y)`.
 Wartość `D` jest aktualizowana w zależności od warunku sprawdzającego, czy przekroczono pewną wartość.
 
+
+## Wypełnianie Trójkątów
+
+Wypełnianie trójkątów to proces rysowania wszystkich pikseli wewnątrz trójkąta na ekranie. Jest to kluczowy problem w grafice komputerowej, szczególnie w renderowaniu grafiki 3D.
+
+### Współrzędne Barycentryczne
+
+Współrzędne barycentryczne pozwalają opisać położenie punktu względem wierzchołków trójkąta. Można je zapisać jako kombinację wierzchołków trójkąta:
+
+\[ p = \alpha \cdot a + \beta \cdot b + \gamma \cdot c \]
+
+gdzie \( \alpha + \beta + \gamma = 1 \).
+
+### Definicja
+
+Punkt \( p \) w współrzędnych barycentrycznych można również zapisać jako:
+
+\[ p(\alpha, \beta, \gamma) = \alpha \cdot a + \beta \cdot b + \gamma \cdot c \]
+
+gdzie \( \alpha = 1 - \beta - \gamma \).
+
+### Cechy Współrzędnych Barycentrycznych
+
+- **Punkt wewnątrz trójkąta**: Jeżeli wszystkie współrzędne barycentryczne \( (\alpha, \beta, \gamma) \) należą do przedziału (0, 1), to punkt leży wewnątrz trójkąta.
+- **Punkt na boku trójkąta**: Jeżeli jedna współrzędna jest równa zero, a pozostałe należą do przedziału (0, 1), to punkt leży na boku trójkąta.
+- **Punkt w wierzchołku trójkąta**: Jeżeli dwie współrzędne są równe zero, a jedna równa 1, to punkt leży w wierzchołku trójkąta.
+
+### Algorytm Wypełniania Trójkątów
+
+1. **Obliczenie współrzędnych barycentrycznych dla każdego piksela**: Dla każdego piksela w obszarze zawierającym trójkąt, obliczamy współrzędne barycentryczne \( (\alpha, \beta, \gamma) \).
+2. **Sprawdzenie czy punkt leży wewnątrz trójkąta**: Sprawdzamy, czy obliczone współrzędne barycentryczne należą do odpowiednich przedziałów, aby określić, czy piksel leży wewnątrz trójkąta.
+3. **Rysowanie pikseli wewnątrz trójkąta**: Jeżeli współrzędne barycentryczne wskazują, że piksel leży wewnątrz trójkąta, to zamalowujemy ten piksel.
+
+### Przykładowy Kod w Java
+
+Oto przykład funkcji wypełniającej trójkąt za pomocą współrzędnych barycentrycznych w języku Java:
+
+```java
+
+public class TriangleFilling {
+
+    public static void main(String[] args) {
+        // Przykładowe wierzchołki trójkąta
+        Point a = new Point(0, 0);
+        Point b = new Point(10, 0);
+        Point c = new Point(5, 10);
+        
+        // Przykładowe wypełnianie trójkąta
+        fillTriangle(a, b, c);
+    }
+    
+    public static void fillTriangle(Point a, Point b, Point c) {
+        // Wyznacz granice trójkąta
+        int minX = Math.min(a.x, Math.min(b.x, c.x));
+        int maxX = Math.max(a.x, Math.max(b.x, c.x));
+        int minY = Math.min(a.y, Math.min(b.y, c.y));
+        int maxY = Math.max(a.y, Math.max(b.y, c.y));
+        
+        // Iteracja przez wszystkie piksele w obszarze otaczającym trójkąt
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = minX; x <= maxX; x++) {
+                Point p = new Point(x, y);
+                double[] barycentric = computeBarycentric(p, a, b, c);
+                
+                // Sprawdzanie czy punkt leży wewnątrz trójkąta
+                if (barycentric[0] >= 0 && barycentric[0] <= 1 && 
+                    barycentric[1] >= 0 && barycentric[1] <= 1 && 
+                    barycentric[2] >= 0 && barycentric[2] <= 1) {
+                    drawPixel(x, y);
+                }
+            }
+        }
+    }
+    
+    // Obliczanie współrzędnych barycentrycznych
+    public static double[] computeBarycentric(Point p, Point a, Point b, Point c) {
+        double detT = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
+        double alpha = ((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / detT;
+        double beta = ((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / detT;
+        double gamma = 1.0 - alpha - beta;
+        return new double[]{alpha, beta, gamma};
+    }
+    
+    // Rysowanie piksela na ekranie
+    public static void drawPixel(int x, int y) {
+        // Kod do rysowania piksela w miejscu (x, y)
+        System.out.println("Drawing pixel at (" + x + ", " + y + ")");
+    }
+    
+    // Klasa reprezentująca punkt (x, y)
+    static class Point {
+        int x, y;
+        
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+}
+
+```
+
+## Obliczanie współrzędnych barycentrycznych
+
+Funkcja `computeBarycentric` oblicza współrzędne barycentryczne punktu `p` względem wierzchołków trójkąta `a`, `b` i `c`.
+
+## Wypełnianie trójkąta
+
+Funkcja `fillTriangle` iteruje przez wszystkie piksele w obszarze otaczającym trójkąt, oblicza współrzędne barycentryczne dla każdego piksela i sprawdza, czy piksel leży wewnątrz trójkąta. Jeżeli współrzędne barycentryczne wskazują, że piksel leży wewnątrz trójkąta, funkcja `drawPixel` rysuje ten piksel.
+
